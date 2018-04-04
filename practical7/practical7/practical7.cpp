@@ -80,7 +80,13 @@ void Q1b()
 {
 	Node<string> *header = createNodes();
 
-	// complete function
+	Node<string> *p = header;
+	while (p->next != nullptr && p->data != "we") {
+		p = p->next;
+	}
+
+	Node<string> *n = new Node<string>("HAS", p->next);
+	p->next = n;
 
 	// print nodes to ensure it worked
 	std::cout << "Q1b. "; printNodes(header);
@@ -92,7 +98,13 @@ void Q1c()
 {
 	Node<string> *header = createNodes();
 
-	//complete function
+	Node<string> *l = header;
+	while (l->next != nullptr) {
+		l = l->next;
+	}
+
+	Node<string> *n = new Node<string>("ZZ");
+	l->next = n;
 
 	// print nodes to ensure it worked
 	std::cout << "Q1c. "; printNodes(header);
@@ -105,7 +117,14 @@ void Q1d()
 {
 	Node<string> *header = createNodes();
 
-	// complete function
+	Node<string> *p = header;
+	while (p->next != nullptr && p->data != "we") {
+		p = p->next;
+	}
+
+	Node<string> *d = p->next;
+	p->next = d->next;
+	delete d;
 
 	// print nodes to ensure it worked
 	std::cout << "Q1d. "; printNodes(header);
@@ -114,17 +133,35 @@ void Q1d()
 
 
 
-// --------------------------------QUESTIONs 2 3 & 4 ---------------------------------------- -
-
+// --------------------------------QUESTIONs 2 3 & 4 ----------------------------------------
 // PostCondition: Determine the intersection of List a and List b and 
 //                return result in in List c.
 //                i.e. elements contained in both Lists a and b
 template <class T>
 void listIntersection(const LinkedList<T> & a, const LinkedList<T> & b, LinkedList<T> & c)
 {
-	// complete
+	for (int i = 0; i < a.size(); i++) {
+		// get element at position i in list a using get(i)
+		// method and check if it can be located in list b using
+		// find(Object) method which tests if object is in list b
+		if (b.find(a.get(i)) != -1) {
+			// add object into output list u at position 0
+			c.add(c.size(), a.get(i));
+		}
+	}
 }
 
+// Iterator version is more efficient due to its efficient list traversal capability
+template <class T>
+void listIntersectionIterator(const LinkedList<T> & a, const LinkedList<T> & b, LinkedList<T> & c)
+{
+	for (ListIterator<T> itr = a.begin(); itr != a.end(); ++itr) {
+		if (b.find(*itr) != -1) {
+			// add Iterator current value into output list c at position 0
+			c.add(c.size(), *itr);
+		}
+	}
+}
 
 // PostCondition: Determine the union of List a and List b and 
 //                return result in in List c.
@@ -132,17 +169,67 @@ void listIntersection(const LinkedList<T> & a, const LinkedList<T> & b, LinkedLi
 template <class T>
 void listUnion(const LinkedList<T> & a, const LinkedList<T> & b, LinkedList<T> & c)
 {
-	// complete
+	for (int i = 0; i < a.size(); i++) {
+		c.add(a.get(i));
+	}
+
+	for (int i = 0; i < b.size(); i++) {
+		T e = b.get(i);
+		if (c.find(e) == -1) {
+			c.add(e);
+		}
+	}
 }
 
+template <class T>
+void listUnionIterator(const LinkedList<T> & a, const LinkedList<T> & b, LinkedList<T> & c)
+{
+	for (ListIterator<T> itr = a.begin(); itr != a.end(); ++itr) {
+		c.add(*itr);
+	}
+	for (ListIterator<T> itr = b.begin(); itr != b.end(); ++itr) {
+		if (c.find(*itr) == -1) {
+			// add Iterator element onto end of list c
+			c.add(*itr);
+		}
+	}
+}
 
 // PostCondition: Populate list c with difference of List a and List b 
 //                i.e. elements of List a, which do not belong to List b.
 template <class T>
 void listDifference(const LinkedList<T> & a, const LinkedList<T> & b, LinkedList<T> & c) {
-	// complete
+	for (int i = 0; i < a.size(); i++) {
+		T e = a.get(i);
+		if (b.find(e) == -1) {
+			c.add(e);
+		}
+	}
+
+	for (int i = 0; i < b.size(); i++) {
+		T e = b.get(i);
+		if (a.find(e) == -1) {
+			c.add(e);
+		}
+	}
 }
 
+template <class T>
+void listDifferenceIterator(const LinkedList<T> & a, const LinkedList<T> & b,
+	LinkedList<T> & c) {
+	for (ListIterator<T> itr = a.begin(); itr != a.end(); ++itr) {
+		if (b.find(*itr) == -1) {
+			// add element into output list c at next position
+			c.add(*itr);
+		}
+	}
+	for (ListIterator<T> itr = b.begin(); itr != b.end(); ++itr) {
+		if (a.find(*itr) == -1) {
+			// insert element onto end of list c 
+			c.add(*itr);
+		}
+	}
+}
 
 // ---------------------- Demo of the List Set Operations ---------------------------
 void testListSetOperations()
